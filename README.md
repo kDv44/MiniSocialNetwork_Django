@@ -1,6 +1,12 @@
 # MiniSocialNetwork_Django
-technology stack:
-  - Django/Django Rest Framework
-  - PostgreSQL
-  - Redis
-  - Celery / Celery beat
+
+# Technology stack:
+
+    front:
+        - Vue3
+        - Tailwind CSS
+    back:
+        - Django/Django Rest Framework
+        - PostgreSQL
+        - Redis
+        - Celery / Celery beat
