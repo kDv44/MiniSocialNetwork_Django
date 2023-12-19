@@ -10,3 +10,8 @@
         - PostgreSQL
         - Redis
         - Celery / Celery beat
+
+
+
+### some commands: 
+    for run front:  npm run dev
