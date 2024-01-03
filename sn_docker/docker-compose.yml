@@ -1,8 +1,19 @@
 version: '3.5'
 
 services:
+  web-app:
+    build:
+      context: ../sn_backend
+      dockerfile: BackDockerFile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./sn_backend:/sn_backend
+    command: >
+      sh -c "python manage.py runserver 0.0.0.0:8000"
+
   postgres:
-    container_name: postgres_container
+    container_name: sn_postgres_container
     image: postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -17,7 +28,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin_container
+    container_name: sn_pgadmin_container
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin@pgadmin.org}
