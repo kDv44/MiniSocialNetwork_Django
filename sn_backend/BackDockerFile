@@ -1,11 +1,16 @@
-FROM python:3.9-alpine3.16
+FROM python:3.9
 
-COPY /requirements.txt /temp/requirements.txt
-COPY ./sn_backend ./MiniSocialNetwork_Django/sn_backend
-WORKDIR /sn_backend
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /app
+
+
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . /app/
 EXPOSE 8000
 
-RUN pip install -r /temp/requirements.txt
-RUN adduser --disabled-password backend-user
-
-USER backend-user
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

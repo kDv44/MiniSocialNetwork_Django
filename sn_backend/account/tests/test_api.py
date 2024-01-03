@@ -1,3 +1,5 @@
+import uuid
+
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -44,6 +46,9 @@ class TestGetAccount(APITestCase):
         response_me = self.client.get(url_me)
         self.assertEqual(response_me.status_code, status.HTTP_200_OK)
 
+        me_result = response_me.json().get("email")
+        self.assertEqual(me_result, data_login["email"])
+
 
 # test - def signup
 class TestCreateAccount(APITestCase):
@@ -71,13 +76,19 @@ class TestSendFriendRequest(APITestCase):
             "password": f"{main_data_signup['password1']}",
         }
 
-        response_signup_main = self.client.post(url_signup, main_data_signup, format="json")
+        response_signup_main = self.client.post(
+            url_signup, main_data_signup, format="json"
+        )
         self.assertEqual(response_signup_main.status_code, status.HTTP_200_OK)
 
-        response_signup_friend = self.client.post(url_signup, friend_data, format="json")
+        response_signup_friend = self.client.post(
+            url_signup, friend_data, format="json"
+        )
         self.assertEqual(response_signup_friend.status_code, status.HTTP_200_OK)
 
-        response_friend_login = self.client.post(url_login, friend_data_login, format="json")
+        response_friend_login = self.client.post(
+            url_login, friend_data_login, format="json"
+        )
         self.assertEqual(response_friend_login.status_code, status.HTTP_200_OK)
 
         token = response_friend_login.data.get("access")
@@ -87,9 +98,10 @@ class TestSendFriendRequest(APITestCase):
         response_me = self.client.get(url_me)
         self.assertEqual(response_me.status_code, status.HTTP_200_OK)
 
-        friend_id = response_me.get("id")
+        friend_id = response_me.json().get("id")
+        self.assertIsNotNone(friend_id)
+
         url_friend_request = f"http://127.0.0.1:8000/api/friends/{friend_id}/request/"
 
-        self.client.post(url_friend_request)
-
-
+        send_request = self.client.post(url_friend_request)
+        self.assertEqual(send_request.status_code, status.HTTP_200_OK)
